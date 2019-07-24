@@ -1,59 +1,91 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Database Backup Application
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+ This Application is built in Laravel (version- 5.6). It basically contain a view, a controller, a scheduler and a config file.
 
-## About Laravel
+# System Requirement
+1) PHP Web Server (Apache2)
+2) PHP (7.2 and above)
+3) Laravel Framework (5.6 and above)
+4) MySQL (5.6 and above)	
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# Set up Project
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+#### Clone Application
 
-## Learning Laravel
+Open your command line or terminal and enter the directory where you would like to 	copy the repository and type the following command
+`git clone https://github.com/ashish-singh-bist/database_backup.git`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+This will create a directory name 'database_backup'
+Navigate into the directory through the terminal (command prompt).
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+After cloning the application you need to install the required packages to run the application. For that you need to run the following command.
+`composer install	`
+This will install all the required packages for laravel application.
 
-## Laravel Sponsors
+check the laravel version install on your system, type the command
+`php artisan --version`
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+Now you need to set Laravel config file "env" in the root folder of your application.
+copy the .env.example file from root folder of the application and save it as .env
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+The next thing you need to do is to set up the application key for your application.
+you have to type the following command in the terminal,
+`php artisan key:generate`
 
-## Contributing
+This will create the application key.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Set-up Config
 
-## Security Vulnerabilities
+You have to configure the database list in the application. Navigate to the Config folder.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Rename the db_host_list.example.php file into db_host_list.php.
 
-## License
+open db_host_list.php file.
+```
+'mysql_db_host_list' => [
+	'localhost' => [
+		'database' => ['#database_name'],
+		'username' => '#username',
+		'password => '#password'
+		]
+	]
+	
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+Replace #database_name, #username and #password with your database_name, Username and Password.
+Also you can set-up multiple host in the db_host_list.php file to take backup.
+
+
+# Files
+1) Controller
+ DefaultController.php
+2) View
+ welcome.blade.php
+3) config file
+ db_host_list.php (path => ''/config/)
+4) Scheduler
+  BackupDatabase.php (path => '/app/Console/Commands')
+
+
+## Functionality
+
+you need to type the following command on the terminal to start the server
+
+`php artisan serve`
+
+Now open 'http://localhost:8000' in the browser.      
+
+when you click "Backup Database" button, it will create  all the database backup which you have mention in the db_host_list.php file and save them in the following path.
+path "database_backup/storage/app/backups".
+
+## Schedule Database Backup
+
+You need to create a cron for scheduling the database backup.
+
+ `* * * * *  php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
+
+also you can manually run the scheduler by using the following command
+`php artisan schedule:run`
+
+The database scheduler will run once a day.
